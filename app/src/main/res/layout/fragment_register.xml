@@ -11,28 +11,35 @@
         android:id="@+id/genderLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="27dp"
         android:text="Gender: "
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="424dp" />
+        app:layout_constraintEnd_toStartOf="@+id/genderSpinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/birthLabel" />
 
     <TextView
         android:id="@+id/birthLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="31dp"
         android:text="Date of Birth:"
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="370dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerEmailInput" />
 
     <TextView
         android:id="@+id/emailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="31dp"
         android:text="Email:"
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="305dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fullnameLabel" />
 
     <TextView
         android:id="@+id/fullnameLabel"
@@ -40,8 +47,8 @@
         android:layout_height="wrap_content"
         android:text="Fullname:"
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="247dp" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/registerFullnameInput"
+        app:layout_constraintStart_toStartOf="@+id/passwordLabel" />
 
     <TextView
         android:id="@+id/textView2"
@@ -71,88 +78,107 @@
         android:id="@+id/usernameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="26dp"
         android:text="Username:"
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="145dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
         android:id="@+id/passwordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="14dp"
         android:text="Password:"
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="199dp" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/registerPasswordTextPassword"
+        app:layout_constraintEnd_toStartOf="@+id/registerPasswordTextPassword" />
 
     <Button
         android:id="@+id/birthBtn"
-        android:layout_width="105dp"
-        android:layout_height="39dp"
-        android:text="Button"
-        tools:layout_editor_absoluteX="191dp"
-        tools:layout_editor_absoluteY="361dp" />
+        android:layout_width="127dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="24dp"
+        android:text="Calender"
+        app:layout_constraintBottom_toTopOf="@+id/genderLabel"
+        app:layout_constraintEnd_toEndOf="@+id/registerEmailInput"
+        app:layout_constraintStart_toStartOf="@+id/registerEmailInput"
+        app:layout_constraintTop_toBottomOf="@+id/registerEmailInput" />
 
     <Spinner
         android:id="@+id/genderSpinner"
-        android:layout_width="301dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="108dp"
-        tools:layout_editor_absoluteY="427dp" />
+        android:layout_marginEnd="2dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/genderLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/genderLabel" />
 
     <EditText
         android:id="@+id/registerUsernameInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="214dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="12dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Name"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="136dp" />
+        android:text="Enter Name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/usernameLabel"
+        app:layout_constraintStart_toEndOf="@+id/usernameLabel" />
 
     <EditText
         android:id="@+id/registerPasswordTextPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="216dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="textPassword"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="191dp" />
+        android:text="Enter Password"
+        app:layout_constraintStart_toStartOf="@+id/registerUsernameInput"
+        app:layout_constraintTop_toBottomOf="@+id/registerUsernameInput" />
 
     <EditText
         android:id="@+id/registerFullnameInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="212dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="4dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Name"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="240dp" />
+        android:text="Enter Fullname"
+        app:layout_constraintStart_toStartOf="@+id/registerPasswordTextPassword"
+        app:layout_constraintTop_toBottomOf="@+id/registerPasswordTextPassword" />
 
     <EditText
         android:id="@+id/registerEmailInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="213dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="1dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Name"
-        tools:layout_editor_absoluteX="141dp"
-        tools:layout_editor_absoluteY="294dp" />
+        android:text="Enter Email"
+        app:layout_constraintEnd_toEndOf="@+id/registerFullnameInput"
+        app:layout_constraintTop_toBottomOf="@+id/registerFullnameInput" />
 
     <Button
         android:id="@+id/exitRegisteBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginBottom="134dp"
         android:text="Exit"
-        tools:layout_editor_absoluteX="34dp"
-        tools:layout_editor_absoluteY="549dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/registerCompleteBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="27dp"
         android:text="Register/Sign Up"
-        tools:layout_editor_absoluteX="229dp"
-        tools:layout_editor_absoluteY="549dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/exitRegisteBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/exitRegisteBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
