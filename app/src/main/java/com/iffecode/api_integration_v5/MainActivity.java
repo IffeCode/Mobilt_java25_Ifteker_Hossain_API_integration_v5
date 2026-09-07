@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     EditText username;
     EditText password;
     Button loginbtn;
+    Button registerBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         username = findViewById(R.id.loginUsername);
         password = findViewById(R.id.loginPassword);
         loginbtn = findViewById(R.id.loginBtn);
+        registerBtn = findViewById(R.id.registerBtn);
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
 
 
