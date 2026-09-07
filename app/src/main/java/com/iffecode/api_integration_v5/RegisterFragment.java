@@ -1,63 +1,86 @@
 package com.iffecode.api_integration_v5;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RegisterFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Calendar;
+
 public class RegisterFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private EditText usernameInput;
+    private EditText passwordInput;
+    private EditText fullnameInput;
+    private EditText emailInput;
+    private Button birthBtn;
+    private Spinner genderSpinner;
+    private Button registerBtn;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+
 
     public RegisterFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RegisterFragment newInstance(String param1, String param2) {
-        RegisterFragment fragment = new RegisterFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
+    @NonNull //Får inte vara null och måste fyllas i med ett värde!
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_register,
+                container, false);
+
+        usernameInput = view.findViewById(R.id.registerUsernameInput);
+        passwordInput = view.findViewById(R.id.registerPasswordTextPassword);
+        fullnameInput = view.findViewById(R.id.registerFullnameInput);
+        emailInput = view.findViewById(R.id.registerEmailInput);
+
+        birthBtn = view.findViewById(R.id.birthBtn);
+        genderSpinner = view.findViewById(R.id.genderSpinner);
+        registerBtn = view.findViewById(R.id.registerCompleteBtn);
+
+        birthBtn.setOnClickListener(v -> {
+            Calendar calender = Calendar.getInstance();
+
+            int year = calender.get(Calendar.YEAR);
+            int month = calender.get(Calendar.MONTH);
+            int day = calender.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    requireContext(),
+                    (view1, selectedYear, selectedMonth, selectedDay) -> {
+                        String date = selectedYear + "-" + String.format("%02d", selectedMonth
+                                + 1) + "-" + String.format("%02d", selectedDay);
+
+                        birthBtn.setText(date);
+                    },
+                    year,
+                    month,
+                    day
+            );
+            datePickerDialog.show();
+
+        });
+
+        String[] genders = {"Male", "Female", "Other"};
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_list_item_1, genders
+        );
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_register, container, false);
     }
