@@ -108,12 +108,26 @@ public class RegisterFragment extends Fragment {
             String gender = genderSpinner.getSelectedItem().toString();
             String dateOfBirth = birthBtn.getText().toString();
 
+
+
             if (username.isEmpty() || password.isEmpty() ||
             fullname.isEmpty() || email.isEmpty()){
                 Toast.makeText(requireContext(), "Please fill in all fields!",
                         Toast.LENGTH_SHORT).show();;
 
                         return;
+            }
+
+            String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
+
+            if (!password.matches(passwordRegex)) {
+                Toast.makeText(
+                        requireContext(),
+                        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter and one number!",
+                        Toast.LENGTH_LONG
+                ).show();
+
+                return;
             }
 
             if (dateOfBirth.equals("Select Date")){
