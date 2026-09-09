@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "884701939665",
+    "firebase_url": "https://api-integration-e7594-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "api-integration-e7594",
+    "storage_bucket": "api-integration-e7594.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884701939665:android:7af39b40c73e6e2ee842f0",
+        "android_client_info": {
+          "package_name": "com.iffecode.api_integration_v5"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE5W-3KzsAk2-66bKBvwPhNlA45bztnRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
