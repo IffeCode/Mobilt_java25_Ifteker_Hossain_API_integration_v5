@@ -13,10 +13,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
 public class RegisterFragment extends Fragment {
+
+    private FirebaseAuth auth;
+    private DatabaseReference db;
+
 
     private EditText usernameInput;
     private EditText passwordInput;
@@ -52,6 +61,11 @@ public class RegisterFragment extends Fragment {
         genderSpinner = view.findViewById(R.id.genderSpinner);
         registerBtn = view.findViewById(R.id.registerCompleteBtn);
 
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance().getReference("users");
+
+
+
         birthBtn.setOnClickListener(v -> {
             Calendar calender = Calendar.getInstance();
 
@@ -78,10 +92,64 @@ public class RegisterFragment extends Fragment {
         String[] genders = {"Male", "Female", "Other"};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(
                 requireContext(),
-                android.R.layout.simple_list_item_1, genders
+                android.R.layout.simple_spinner_item, genders
         );
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        genderSpinner.setAdapter(genderAdapter);
+
+        registerBtn.setOnClickListener(v -> {
+            String username = usernameInput.getText().toString().trim();
+            String password = passwordInput.getText().toString().trim();
+            String fullname = fullnameInput.getText().toString().trim();
+            String email = emailInput.getText().toString().trim();
+
+            String gender = genderSpinner.getSelectedItem().toString();
+            String dateOfBirth = birthBtn.getText().toString();
+
+            if (username.isEmpty() || password.isEmpty() ||
+            fullname.isEmpty() || email.isEmpty()){
+                Toast.makeText(requireContext(), "Please fill in all fields!",
+                        Toast.LENGTH_SHORT).show();;
+
+                        return;
+            }
+
+            if (dateOfBirth.equals("Select Date")){
+                Toast.makeText(requireContext(), "Please select date of birth!",
+                        Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+
+                            String userId = auth.getCurrentUser().getUid();
+
+                            db.child(userId).child("username")
+                                            .setValue(username);
+                            db.child(userId).child("fullname")
+                                            .setValue(fullname);
+                            db.child(userId).child("email")
+                                            .setValue(email);
+                            db.child(userId).child("gender")
+                                            .setValue(gender);
+                            db.child(userId).child("dateOfBirth")
+                                            .setValue(dateOfBirth);
+
+                            Toast.makeText(requireContext(), "Registration was a success!",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(requireContext(),"Registration failed, try again!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
+        });
+
+        return view;
     }
 }
