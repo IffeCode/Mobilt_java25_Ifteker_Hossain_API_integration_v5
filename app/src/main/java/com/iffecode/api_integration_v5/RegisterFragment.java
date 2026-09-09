@@ -35,6 +35,8 @@ public class RegisterFragment extends Fragment {
     private Spinner genderSpinner;
     private Button registerBtn;
 
+    private Button exitBtn;
+
 
 
 
@@ -60,6 +62,9 @@ public class RegisterFragment extends Fragment {
         birthBtn = view.findViewById(R.id.birthBtn);
         genderSpinner = view.findViewById(R.id.genderSpinner);
         registerBtn = view.findViewById(R.id.registerCompleteBtn);
+
+        exitBtn = view.findViewById(R.id.exitRegisteBtn);
+
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance().getReference("users");
@@ -162,6 +167,10 @@ public class RegisterFragment extends Fragment {
                         }
 
                     });
+        });
+
+        exitBtn.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
 
         return view;
