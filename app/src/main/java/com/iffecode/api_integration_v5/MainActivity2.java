@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 public class MainActivity2 extends AppCompatActivity {
 
@@ -22,8 +23,11 @@ public class MainActivity2 extends AppCompatActivity {
         Button profileBtn = findViewById(R.id.profileBtn);
         Button weatherBtn = findViewById(R.id.weatherBtn);
 
-        NavController navController =
-                Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.nav_host_fragment);
+
+        NavController navController = navHostFragment.getNavController();
 
         profileBtn.setOnClickListener(v -> {
             navController.navigate(R.id.profileFragment);
