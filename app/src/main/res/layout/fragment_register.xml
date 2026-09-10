@@ -102,7 +102,7 @@
         android:layout_height="51dp"
         android:layout_marginTop="22dp"
         android:layout_marginBottom="24dp"
-        android:text="Calender"
+        android:hint="Calender"
         app:layout_constraintBottom_toTopOf="@+id/genderLabel"
         app:layout_constraintEnd_toEndOf="@+id/registerEmailInput"
         app:layout_constraintStart_toStartOf="@+id/registerEmailInput"
@@ -124,7 +124,7 @@
         android:layout_marginStart="12dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Enter Name"
+        android:hint="Enter Name"
         app:layout_constraintBaseline_toBaselineOf="@+id/usernameLabel"
         app:layout_constraintStart_toEndOf="@+id/usernameLabel" />
 
@@ -135,7 +135,7 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="textPassword"
-        android:text="Enter Password"
+        android:hint="Enter Password"
         app:layout_constraintStart_toStartOf="@+id/registerUsernameInput"
         app:layout_constraintTop_toBottomOf="@+id/registerUsernameInput" />
 
@@ -146,7 +146,7 @@
         android:layout_marginTop="4dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Enter Fullname"
+        android:hint="Enter Fullname"
         app:layout_constraintStart_toStartOf="@+id/registerPasswordTextPassword"
         app:layout_constraintTop_toBottomOf="@+id/registerPasswordTextPassword" />
 
@@ -158,7 +158,7 @@
         android:layout_marginEnd="1dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Enter Email"
+        android:hint="Enter Email"
         app:layout_constraintEnd_toEndOf="@+id/registerFullnameInput"
         app:layout_constraintTop_toBottomOf="@+id/registerFullnameInput" />
 
