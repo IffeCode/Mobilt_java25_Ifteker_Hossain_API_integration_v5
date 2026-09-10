@@ -1,12 +1,15 @@
 package com.iffecode.api_integration_v5;
 
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 public class MainActivity2 extends AppCompatActivity {
 
@@ -16,7 +19,19 @@ public class MainActivity2 extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main2);
 
+        Button profileBtn = findViewById(R.id.profileBtn);
+        Button weatherBtn = findViewById(R.id.weatherBtn);
 
+        NavController navController =
+                Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        profileBtn.setOnClickListener(v -> {
+            navController.navigate(R.id.profileFragment);
+        });
+
+        weatherBtn.setOnClickListener(v -> {
+            navController.navigate(R.id.weatherFragment);
+        });
 
 
 
