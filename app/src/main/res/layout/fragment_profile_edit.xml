@@ -7,23 +7,119 @@
     android:layout_height="match_parent"
     tools:context=".ProfileEditFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/editProfileTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginTop="30dp"
+        android:text="Edit Profile"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/genderLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="41dp"
+        android:text="Gender:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameEditText" />
+
+    <Spinner
+        android:id="@+id/genderEditSpinner"
+        android:layout_width="227dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/genderLabel"
+        app:layout_constraintStart_toEndOf="@+id/genderLabel"
+        app:layout_constraintTop_toTopOf="@+id/genderLabel"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/dateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:text="Date Of Birth:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/genderLabel"
+        app:layout_constraintTop_toBottomOf="@+id/genderLabel" />
+
+    <Button
+        android:id="@+id/dateOfBirthEditButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="Select Date"
+        app:layout_constraintBaseline_toBaselineOf="@+id/dateLabel"
+        app:layout_constraintStart_toEndOf="@+id/dateLabel" />
+
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:text="Save Changes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editProfileTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.74" />
 
     <Button
         android:id="@+id/editToProfileBtn"
-        android:layout_width="173dp"
-        android:layout_height="55dp"
+        android:layout_width="137dp"
+        android:layout_height="51dp"
         android:text="Profile to Edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.197"
+        app:layout_constraintHorizontal_bias="0.583"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.915" />
+        app:layout_constraintVertical_bias="0.875" />
+
+    <EditText
+        android:id="@+id/fullnameEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="28dp"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="Enter New Name"
+        app:layout_constraintEnd_toEndOf="@+id/editProfileTitle"
+        app:layout_constraintTop_toBottomOf="@+id/editProfileTitle" />
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="Enter New Email"
+        app:layout_constraintStart_toStartOf="@+id/fullnameEditText"
+        app:layout_constraintTop_toBottomOf="@+id/fullnameEditText" />
+
+    <EditText
+        android:id="@+id/usernameEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="18dp"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="Enter New Username"
+        app:layout_constraintStart_toStartOf="@+id/emailEditText"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

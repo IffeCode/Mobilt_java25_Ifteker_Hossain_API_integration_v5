@@ -60,7 +60,7 @@ public class RegisterFragment extends Fragment {
         emailInput = view.findViewById(R.id.registerEmailInput);
 
         birthBtn = view.findViewById(R.id.birthBtn);
-        genderSpinner = view.findViewById(R.id.genderSpinner);
+        genderSpinner = view.findViewById(R.id.genderEditSpinner);
         registerBtn = view.findViewById(R.id.registerCompleteBtn);
 
         exitBtn = view.findViewById(R.id.exitRegisteBtn);
