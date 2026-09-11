@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,10 +149,12 @@ public class CountryFragment extends Fragment {
                         Call<List<Country>> call,
                         Throwable t) {
 
+                    Log.e("COUNTRY_API", "API connection failed", t);
+
                     Toast.makeText(
                             requireContext(),
-                            "API connection failed",
-                            Toast.LENGTH_SHORT
+                            "API error: " + t.getMessage(),
+                            Toast.LENGTH_LONG
                     ).show();
                 }
             });

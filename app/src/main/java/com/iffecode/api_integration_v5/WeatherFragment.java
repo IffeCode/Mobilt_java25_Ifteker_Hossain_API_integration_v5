@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class WeatherFragment extends Fragment {
     private TextView cityText;
     private TextView temperatureText;
     private TextView conditionText;
+    private TextView windText;
 
     private Button searchWeatherBtn;
     private Button weatherToHomeBtn;
@@ -57,18 +59,30 @@ public class WeatherFragment extends Fragment {
         cityText = view.findViewById(R.id.cityText);
         temperatureText = view.findViewById(R.id.temperatureText);
         conditionText = view.findViewById(R.id.conditionText);
+        windText = view.findViewById(R.id.windText);
 
         searchWeatherBtn = view.findViewById(R.id.searchWeatherBtn);
         weatherToHomeBtn = view.findViewById(R.id.weatherToHomeBtn);
         countryBtn = view.findViewById(R.id.countryBtn);
 
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://goweather.herokuapp.com/")
+        Retrofit geocodingRetrofit = new Retrofit.Builder()
+                .baseUrl("https://geocoding-api.open-meteo.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        ApiService apiService = retrofit.create(ApiService.class);
+        ApiService geocodingApi =
+                geocodingRetrofit.create(ApiService.class);
+
+
+        Retrofit weatherRetrofit = new Retrofit.Builder()
+                .baseUrl("https://api.open-meteo.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService weatherApi =
+                weatherRetrofit.create(ApiService.class);
+
 
         searchWeatherBtn.setOnClickListener(v -> {
 
@@ -86,49 +100,120 @@ public class WeatherFragment extends Fragment {
                 return;
             }
 
-            apiService.getWeather(city).enqueue(new Callback<Weather>() {
+            geocodingApi.getLocation(city, 1)
+                    .enqueue(new Callback<GeocodingResponse>() {
 
-                @Override
-                public void onResponse(
-                        Call<Weather> call,
-                        Response<Weather> response) {
+                        @Override
+                        public void onResponse(
+                                Call<GeocodingResponse> call,
+                                Response<GeocodingResponse> response) {
 
-                    if (response.isSuccessful() && response.body() != null) {
+                            if (response.isSuccessful()
+                                    && response.body() != null
+                                    && response.body().getResults() != null
+                                    && !response.body().getResults().isEmpty()) {
 
-                        Weather weather = response.body();
+                                Geocoding location =
+                                        response.body()
+                                                .getResults()
+                                                .get(0);
 
-                        cityText.setText(city);
+                                double latitude =
+                                        location.getLatitude();
 
-                        temperatureText.setText(
-                                "Temperature: " + weather.getTemperature()
-                        );
+                                double longitude =
+                                        location.getLongitude();
 
-                        conditionText.setText(
-                                "Condition: " + weather.getDescription()
-                        );
+                                weatherApi.getWeather(
+                                                latitude,
+                                                longitude,
+                                                "temperature_2m,wind_speed_10m,weather_code"
+                                        )
+                                        .enqueue(new Callback<OpenMeteoWeather>() {
 
-                    } else {
+                                            @Override
+                                            public void onResponse(
+                                                    Call<OpenMeteoWeather> call,
+                                                    Response<OpenMeteoWeather> response) {
 
-                        Toast.makeText(
-                                requireContext(),
-                                "Could not get weather data",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                    }
-                }
+                                                if (response.isSuccessful()
+                                                        && response.body() != null
+                                                        && response.body().getCurrent() != null) {
 
-                @Override
-                public void onFailure(
-                        Call<Weather> call,
-                        Throwable t) {
+                                                    OpenMeteoWeather weather =
+                                                            response.body();
 
-                    Toast.makeText(
-                            requireContext(),
-                            "API connection failed",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            });
+                                                    CurrentWeather current =
+                                                            weather.getCurrent();
+
+                                                    cityText.setText(
+                                                            location.getName()
+                                                    );
+
+                                                    temperatureText.setText(
+                                                            "Temperature: "
+                                                                    + current.getTemperature_2m()
+                                                                    + " °C"
+                                                    );
+
+                                                    conditionText.setText(
+                                                            "Condition: "
+                                                                    + getWeatherDescription(
+                                                                    current.getWeather_code()
+                                                            )
+                                                    );
+
+                                                    windText.setText(
+                                                            "Wind: "
+                                                                    + current.getWind_speed_10m()
+                                                                    + " km/h"
+                                                    );
+
+                                                } else {
+
+                                                    Toast.makeText(
+                                                            requireContext(),
+                                                            "Could not get weather data",
+                                                            Toast.LENGTH_SHORT
+                                                    ).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(
+                                                    Call<OpenMeteoWeather> call,
+                                                    Throwable t) {
+
+                                                Toast.makeText(
+                                                        requireContext(),
+                                                        "Weather API connection failed",
+                                                        Toast.LENGTH_SHORT
+                                                ).show();
+                                            }
+                                        });
+
+                            } else {
+
+                                Toast.makeText(
+                                        requireContext(),
+                                        "City not found",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(
+                                Call<GeocodingResponse> call,
+                                Throwable t) {
+
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Location API connection failed",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    });
         });
 
         countryBtn.setOnClickListener(v -> {
@@ -149,5 +234,57 @@ public class WeatherFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private String getWeatherDescription(int weatherCode) {
+
+        switch (weatherCode) {
+
+            case 0:
+                return "Clear sky";
+
+            case 1:
+                return "Mainly clear";
+
+            case 2:
+                return "Partly cloudy";
+
+            case 3:
+                return "Overcast";
+
+            case 45:
+            case 48:
+                return "Fog";
+
+            case 51:
+            case 53:
+            case 55:
+                return "Drizzle";
+
+            case 61:
+            case 63:
+            case 65:
+                return "Rain";
+
+            case 71:
+            case 73:
+            case 75:
+                return "Snow";
+
+            case 80:
+            case 81:
+            case 82:
+                return "Rain showers";
+
+            case 95:
+                return "Thunderstorm";
+
+            case 96:
+            case 99:
+                return "Thunderstorm with hail";
+
+            default:
+                return "Unknown";
+        }
     }
 }

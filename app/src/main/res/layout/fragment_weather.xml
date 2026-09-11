@@ -76,11 +76,11 @@
         app:layout_constraintTop_toBottomOf="@id/temperatureText" />
 
     <TextView
-        android:id="@+id/humidityText"
+        android:id="@+id/windText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="Humidity: -- %"
+        android:text="Wind: -- km/h"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
