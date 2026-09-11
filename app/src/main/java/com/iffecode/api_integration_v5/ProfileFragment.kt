@@ -1,167 +1,151 @@
-package com.iffecode.api_integration_v5;
+package com.iffecode.api_integration_v5
 
-import android.os.Bundle;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+class ProfileFragment : Fragment() {
+    private var auth: FirebaseAuth? = null
+    private var db: DatabaseReference? = null
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+    private var fullnameText: TextView? = null
+    private var usernameText: TextView? = null
+    private var emailText: TextView? = null
+    private var genderText: TextView? = null
+    private var dateOfBirthText: TextView? = null
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-
-public class ProfileFragment extends Fragment {
-
-    private FirebaseAuth auth;
-    private DatabaseReference db;
-
-    private TextView fullnameText;
-    private TextView usernameText;
-    private TextView emailText;
-    private TextView genderText;
-    private TextView dateOfBirthText;
-
-    private Button profileToHomeBtn;
-    private Button profileToEditBtn;
+    private var profileToHomeBtn: Button? = null
+    private var profileToEditBtn: Button? = null
 
 
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(
+            R.layout.fragment_profile,
+            container,
+            false
+        )
 
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_profile,
-                container,
-                false);
-
-        auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance()
 
         db = FirebaseDatabase.getInstance()
-                .getReference("users");
+            .getReference("users")
 
-        fullnameText = view.findViewById(R.id.fullnameText);
-        usernameText = view.findViewById(R.id.usernameText);
-        emailText = view.findViewById(R.id.emailText);
-        genderText = view.findViewById(R.id.genderText);
-        dateOfBirthText = view.findViewById(R.id.dateOfBirthText);
+        fullnameText = view.findViewById<TextView>(R.id.fullnameText)
+        usernameText = view.findViewById<TextView>(R.id.usernameText)
+        emailText = view.findViewById<TextView>(R.id.emailText)
+        genderText = view.findViewById<TextView>(R.id.genderText)
+        dateOfBirthText = view.findViewById<TextView>(R.id.dateOfBirthText)
 
         profileToHomeBtn =
-                view.findViewById(R.id.ProfileToHomeBtn);
+            view.findViewById<Button>(R.id.ProfileToHomeBtn)
 
         profileToEditBtn =
-                view.findViewById(R.id.ProfileToEditBtn);
+            view.findViewById<Button>(R.id.ProfileToEditBtn)
 
-        loadUserData();
+        loadUserData()
 
-        profileToHomeBtn.setOnClickListener(v -> {
+        profileToHomeBtn!!.setOnClickListener(View.OnClickListener { v: View? ->
+            val activity =
+                requireActivity() as MainActivity2
+            activity.showHome()
+        })
 
-            MainActivity2 activity =
-                    (MainActivity2) requireActivity();
-
-            activity.showHome();
-        });
-
-        profileToEditBtn.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(v);
-            navController.navigate(R.id.profileEditFragment);
-        });
+        profileToEditBtn!!.setOnClickListener(View.OnClickListener { v: View? ->
+            val navController = findNavController(v!!)
+            navController.navigate(R.id.profileEditFragment)
+        })
 
 
 
-       return view;
+        return view
     }
 
-    private void loadUserData() {
-
-        if (auth.getCurrentUser() == null) {
-            return;
+    private fun loadUserData() {
+        if (auth!!.getCurrentUser() == null) {
+            return
         }
 
-        String userId =
-                auth.getCurrentUser().getUid();
+        val userId =
+            auth!!.getCurrentUser()!!.getUid()
 
-        db.child(userId).get().addOnCompleteListener(task -> {
+        db!!.child(userId).get()
+            .addOnCompleteListener(OnCompleteListener { task: Task<DataSnapshot>? ->
+                if (task!!.isSuccessful()) {
+                    val snapshot = task.getResult()
 
-            if (task.isSuccessful()) {
-
-                DataSnapshot snapshot = task.getResult();
-
-                String fullname =
+                    val fullname =
                         snapshot.child("fullname")
-                                .getValue(String.class);
+                            .getValue<String?>(String::class.java)
 
-                String username =
+                    val username =
                         snapshot.child("username")
-                                .getValue(String.class);
+                            .getValue<String?>(String::class.java)
 
-                String email =
+                    val email =
                         snapshot.child("email")
-                                .getValue(String.class);
+                            .getValue<String?>(String::class.java)
 
-                String gender =
+                    val gender =
                         snapshot.child("gender")
-                                .getValue(String.class);
+                            .getValue<String?>(String::class.java)
 
-                String dateOfBirth =
+                    val dateOfBirth =
                         snapshot.child("dateOfBirth")
-                                .getValue(String.class);
+                            .getValue<String?>(String::class.java)
 
 
-                if (fullname != null) {
-                    fullnameText.setText(
+                    if (fullname != null) {
+                        fullnameText!!.setText(
                             "Full name: " + fullname
-                    );
-                }
+                        )
+                    }
 
-                if (username != null) {
-                    usernameText.setText(
+                    if (username != null) {
+                        usernameText!!.setText(
                             "Username: " + username
-                    );
-                }
+                        )
+                    }
 
-                if (email != null) {
-                    emailText.setText(
+                    if (email != null) {
+                        emailText!!.setText(
                             "Email: " + email
-                    );
-                }
+                        )
+                    }
 
-                if (gender != null) {
-                    genderText.setText(
+                    if (gender != null) {
+                        genderText!!.setText(
                             "Gender: " + gender
-                    );
-                }
+                        )
+                    }
 
-                if (dateOfBirth != null) {
-                    dateOfBirthText.setText(
+                    if (dateOfBirth != null) {
+                        dateOfBirthText!!.setText(
                             "Date of birth: " + dateOfBirth
-                    );
-                }
-
-            } else {
-
-                Toast.makeText(
+                        )
+                    }
+                } else {
+                    Toast.makeText(
                         requireContext(),
                         "Could not load profile",
                         Toast.LENGTH_SHORT
-                ).show();
-            }
-        });
+                    ).show()
+                }
+            })
     }
 }

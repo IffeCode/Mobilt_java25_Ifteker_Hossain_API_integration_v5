@@ -1,31 +1,26 @@
-package com.iffecode.api_integration_v5;
+package com.iffecode.api_integration_v5
 
-import java.util.List;
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
-
-public interface ApiService {
-
+interface ApiService {
     @GET("v1/search")
-    Call<GeocodingResponse> getLocation(
-            @Query("name") String city,
-            @Query("count") int count
-    );
+    fun getLocation(
+        @Query("name") city: String,
+        @Query("count") count: Int
+    ): Call<GeocodingResponse>
 
     @GET("v1/forecast")
-    Call<OpenMeteoWeather> getWeather(
-            @Query("latitude") double latitude,
-            @Query("longitude") double longitude,
-            @Query("current") String current
-    );
+    fun getWeather(
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
+        @Query("current") current: String
+    ): Call<OpenMeteoWeather>
 
     @GET("name/{country}")
-    Call<List<Country>> getCountry(
-            @Path("country") String country
-    );
-
-
+    fun getCountry(
+        @Path("country") country: String
+    ): Call<MutableList<Country>>
 }

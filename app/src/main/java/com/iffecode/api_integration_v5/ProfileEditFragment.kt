@@ -1,238 +1,213 @@
-package com.iffecode.api_integration_v5;
+package com.iffecode.api_integration_v5
 
-import android.app.DatePickerDialog;
-import android.os.Bundle;
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import java.util.Calendar
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+class ProfileEditFragment : Fragment() {
+    private var auth: FirebaseAuth? = null
+    private var db: DatabaseReference? = null
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
+    private var fullnameEditText: EditText? = null
+    private var usernameEditText: EditText? = null
+    private var genderEditSpinner: Spinner? = null
+    private var dateOfBirthEditButton: Button? = null
+    private var updateButton: Button? = null
+    private var toProfileBtn: Button? = null
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Calendar;
-
-public class ProfileEditFragment extends Fragment {
-
-    private FirebaseAuth auth;
-    private DatabaseReference db;
-
-    private EditText fullnameEditText;
-    private EditText usernameEditText;
-    private Spinner genderEditSpinner;
-    private Button dateOfBirthEditButton;
-    private Button updateButton;
-    private Button toProfileBtn;
-
-    public ProfileEditFragment() {
-        // Required empty public constructor
-    }
-
-
-
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(
+            R.layout.fragment_profile_edit,
+            container,
+            false
+        )
 
 
-        View view = inflater.inflate(
-                R.layout.fragment_profile_edit,
-                container,
-                false
-        );
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseDatabase.getInstance().getReference("users")
 
 
-        auth = FirebaseAuth.getInstance();
-        db = FirebaseDatabase.getInstance().getReference("users");
+        fullnameEditText = view.findViewById<EditText>(R.id.fullnameEditText)
+        usernameEditText = view.findViewById<EditText>(R.id.usernameEditText)
 
-
-        fullnameEditText = view.findViewById(R.id.fullnameEditText);
-        usernameEditText = view.findViewById(R.id.usernameEditText);
-
-        genderEditSpinner = view.findViewById(R.id.genderEditSpinner);
+        genderEditSpinner = view.findViewById<Spinner>(R.id.genderEditSpinner)
         dateOfBirthEditButton =
-                view.findViewById(R.id.dateOfBirthEditButton);
+            view.findViewById<Button>(R.id.dateOfBirthEditButton)
 
-        updateButton = view.findViewById(R.id.updateButton);
-        toProfileBtn = view.findViewById(R.id.editToProfileBtn);
+        updateButton = view.findViewById<Button>(R.id.updateButton)
+        toProfileBtn = view.findViewById<Button>(R.id.editToProfileBtn)
 
 
-        String[] genders = {"Male", "Female", "Other"};
+        val genders = arrayOf<String?>("Male", "Female", "Other")
 
-        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                genders
-        );
+        val genderAdapter = ArrayAdapter<String?>(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            genders
+        )
 
         genderAdapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item
-        );
+            android.R.layout.simple_spinner_dropdown_item
+        )
 
-        genderEditSpinner.setAdapter(genderAdapter);
-
-
-        loadUserData();
+        genderEditSpinner!!.setAdapter(genderAdapter)
 
 
-        dateOfBirthEditButton.setOnClickListener(v -> {
-
-            Calendar calendar = Calendar.getInstance();
-
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog =
-                    new DatePickerDialog(
-                            requireContext(),
-                            (view1, selectedYear, selectedMonth, selectedDay) -> {
-
-                                String date =
-                                        selectedYear + "-" +
-                                                String.format("%02d",
-                                                        selectedMonth + 1) + "-" +
-                                                String.format("%02d",
-                                                        selectedDay);
-
-                                dateOfBirthEditButton.setText(date);
-                            },
-                            year,
-                            month,
-                            day
-                    );
-
-            datePickerDialog.show();
-        });
+        loadUserData()
 
 
-        updateButton.setOnClickListener(v -> {
+        dateOfBirthEditButton!!.setOnClickListener(View.OnClickListener { v: View? ->
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            String fullname =
-                    fullnameEditText.getText().toString().trim();
+            val datePickerDialog =
+                DatePickerDialog(
+                    requireContext(),
+                    OnDateSetListener { view1: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                        val date =
+                            selectedYear.toString() + "-" + String.format(
+                                "%02d",
+                                selectedMonth + 1
+                            ) + "-" + String.format(
+                                "%02d",
+                                selectedDay
+                            )
+                        dateOfBirthEditButton!!.setText(date)
+                    },
+                    year,
+                    month,
+                    day
+                )
+            datePickerDialog.show()
+        })
 
-            String username =
-                    usernameEditText.getText().toString().trim();
 
-            String gender =
-                    genderEditSpinner.getSelectedItem().toString();
+        updateButton!!.setOnClickListener(View.OnClickListener { v: View? ->
+            val fullname =
+                fullnameEditText!!.getText().toString().trim { it <= ' ' }
+            val username =
+                usernameEditText!!.getText().toString().trim { it <= ' ' }
 
-            String dateOfBirth =
-                    dateOfBirthEditButton.getText().toString();
+            val gender =
+                genderEditSpinner!!.getSelectedItem().toString()
 
-            String userId =
-                    auth.getCurrentUser().getUid();
+            val dateOfBirth =
+                dateOfBirthEditButton!!.getText().toString()
+
+            val userId =
+                auth!!.getCurrentUser()!!.getUid()
 
 
             if (!fullname.isEmpty()) {
-                db.child(userId).child("fullname").setValue(fullname);
+                db!!.child(userId).child("fullname").setValue(fullname)
             }
 
 
             if (!username.isEmpty()) {
-                db.child(userId).child("username").setValue(username);
+                db!!.child(userId).child("username").setValue(username)
             }
 
 
             if (!gender.isEmpty()) {
-                db.child(userId).child("gender").setValue(gender);
+                db!!.child(userId).child("gender").setValue(gender)
             }
 
 
-            if (!dateOfBirth.equals("Select Date")) {
-                db.child(userId).child("dateOfBirth").setValue(dateOfBirth);
+            if (dateOfBirth != "Select Date") {
+                db!!.child(userId).child("dateOfBirth").setValue(dateOfBirth)
             }
 
             Toast.makeText(
-                    requireContext(),
-                    "Profile updated!",
-                    Toast.LENGTH_SHORT
-            ).show();
+                requireContext(),
+                "Profile updated!",
+                Toast.LENGTH_SHORT
+            ).show()
 
 
-            NavController navController =
-                    Navigation.findNavController(v);
+            val navController =
+                findNavController(v!!)
+            navController.popBackStack()
+        })
 
-            navController.popBackStack();
-        });
 
+        toProfileBtn!!.setOnClickListener(View.OnClickListener { v: View? ->
+            val navController =
+                findNavController(v!!)
+            navController.popBackStack()
+        })
 
-        toProfileBtn.setOnClickListener(v -> {
-
-            NavController navController =
-                    Navigation.findNavController(v);
-
-            navController.popBackStack();
-        });
-
-        return view;
+        return view
     }
 
-    private void loadUserData() {
+    private fun loadUserData() {
+        val userId =
+            auth!!.getCurrentUser()!!.getUid()
 
-        String userId =
-                auth.getCurrentUser().getUid();
+        db!!.child(userId).get()
+            .addOnCompleteListener(OnCompleteListener { task: Task<DataSnapshot>? ->
+                if (task!!.isSuccessful()) {
+                    val snapshot = task.getResult()
 
-        db.child(userId).get().addOnCompleteListener(task -> {
+                    val fullname =
+                        snapshot.child("fullname").getValue<String?>(String::class.java)
 
-            if (task.isSuccessful()) {
+                    val username =
+                        snapshot.child("username").getValue<String?>(String::class.java)
 
-                DataSnapshot snapshot = task.getResult();
+                    val gender =
+                        snapshot.child("gender").getValue<String?>(String::class.java)
 
-                String fullname =
-                        snapshot.child("fullname").getValue(String.class);
+                    val dateOfBirth =
+                        snapshot.child("dateOfBirth").getValue<String?>(String::class.java)
 
-                String username =
-                        snapshot.child("username").getValue(String.class);
+                    if (fullname != null) {
+                        fullnameEditText!!.setText(fullname)
+                    }
 
-                String gender =
-                        snapshot.child("gender").getValue(String.class);
+                    if (username != null) {
+                        usernameEditText!!.setText(username)
+                    }
 
-                String dateOfBirth =
-                        snapshot.child("dateOfBirth").getValue(String.class);
+                    if (gender != null) {
+                        val adapter =
+                            genderEditSpinner!!.getAdapter() as ArrayAdapter<String?>
 
-                if (fullname != null) {
-                    fullnameEditText.setText(fullname);
-                }
+                        val position =
+                            adapter.getPosition(gender)
 
-                if (username != null) {
-                    usernameEditText.setText(username);
-                }
+                        if (position >= 0) {
+                            genderEditSpinner!!.setSelection(position)
+                        }
+                    }
 
-                if (gender != null) {
-
-                    ArrayAdapter<String> adapter =
-                            (ArrayAdapter<String>) genderEditSpinner.getAdapter();
-
-                    int position =
-                            adapter.getPosition(gender);
-
-                    if (position >= 0) {
-                        genderEditSpinner.setSelection(position);
+                    if (dateOfBirth != null) {
+                        dateOfBirthEditButton!!.setText(dateOfBirth)
                     }
                 }
-
-                if (dateOfBirth != null) {
-                    dateOfBirthEditButton.setText(dateOfBirth);
-                }
-            }
-        });
-
+            })
     }
 }

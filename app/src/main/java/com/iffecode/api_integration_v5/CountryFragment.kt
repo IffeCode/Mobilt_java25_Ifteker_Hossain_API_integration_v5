@@ -1,173 +1,153 @@
-package com.iffecode.api_integration_v5;
+package com.iffecode.api_integration_v5
 
-import android.os.Bundle;
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+class CountryFragment : Fragment() {
+    private lateinit var countryInput: EditText
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+    private lateinit var countryNameText: TextView
+    private lateinit var capitalText: TextView
+    private lateinit var populationText: TextView
+    private lateinit var regionText: TextView
 
-import java.util.List;
+    private lateinit var searchCountryBtn: Button
+    private lateinit var countryToWeatherBtn: Button
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
+        val view = inflater.inflate(
+            R.layout.fragment_country,
+            container,
+            false
+        )
 
-public class CountryFragment extends Fragment {
+        countryInput = view.findViewById(R.id.countryInput)
 
+        countryNameText = view.findViewById(R.id.countryNameText)
+        capitalText = view.findViewById(R.id.capitalText)
+        populationText = view.findViewById(R.id.populationText)
+        regionText = view.findViewById(R.id.regionText)
 
-    private EditText countryInput;
+        searchCountryBtn = view.findViewById(R.id.searchCountryBtn)
+        countryToWeatherBtn = view.findViewById(R.id.countryToWeatherBtn)
 
-    private TextView countryNameText;
-    private TextView capitalText;
-    private TextView populationText;
-    private TextView regionText;
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://countries.dev/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-    private Button searchCountryBtn;
-    private Button countryToWeatherBtn;
+        val apiService = retrofit.create<ApiService>(
+            ApiService::class.java
+        )
 
-    public CountryFragment() {
-        // Required empty public constructor
-    }
+        searchCountryBtn.setOnClickListener {
 
-
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
-
-        View view = inflater.inflate(
-                R.layout.fragment_country,
-                container,
-                false
-        );
-
-        countryInput = view.findViewById(R.id.countryInput);
-
-        countryNameText = view.findViewById(R.id.countryNameText);
-        capitalText = view.findViewById(R.id.capitalText);
-        populationText = view.findViewById(R.id.populationText);
-        regionText = view.findViewById(R.id.regionText);
-
-        searchCountryBtn = view.findViewById(R.id.searchCountryBtn);
-        countryToWeatherBtn = view.findViewById(R.id.countryToWeatherBtn);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://countries.dev/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
-
-        searchCountryBtn.setOnClickListener(v -> {
-
-            String country =
-                    countryInput.getText().toString().trim();
+            val country = countryInput.text.toString().trim()
 
             if (country.isEmpty()) {
 
                 Toast.makeText(
-                        requireContext(),
-                        "Please enter a country",
-                        Toast.LENGTH_SHORT
-                ).show();
+                    requireContext(),
+                    "Please enter a country",
+                    Toast.LENGTH_SHORT
+                ).show()
 
-                return;
+                return@setOnClickListener
             }
 
-            apiService.getCountry(country).enqueue(new Callback<List<Country>>() {
+            apiService.getCountry(country)
+                .enqueue(object : Callback<MutableList<Country>> {
 
-                @Override
-                public void onResponse(
-                        Call<List<Country>> call,
-                        Response<List<Country>> response) {
+                    override fun onResponse(
+                        call: Call<MutableList<Country>>,
+                        response: Response<MutableList<Country>>
+                    ) {
 
-                    if (response.isSuccessful()
-                            && response.body() != null
-                            && !response.body().isEmpty()) {
+                        if (
+                            response.isSuccessful &&
+                            response.body() != null &&
+                            response.body()!!.isNotEmpty()
+                        ) {
 
-                        Country countryData = response.body().get(0);
+                            val countryData =
+                                response.body()!![0]
 
-                        countryNameText.setText(
-                                "Country: " +
-                                        countryData.getName()
-                        );
+                            countryNameText.text =
+                                "Country: ${countryData.name}"
 
-                        if (countryData.getCapital() != null
-                                && !countryData.getCapital().isEmpty()) {
+                            if (
+                                !countryData.capital.isNullOrEmpty()
+                            ) {
+                                capitalText.text =
+                                    "Capital: ${countryData.capital}"
+                            } else {
+                                capitalText.text =
+                                    "Capital: No information"
+                            }
 
-                            capitalText.setText(
-                                    "Capital: " +
-                                            countryData.getCapital()
-                            );
+                            populationText.text =
+                                "Population: ${countryData.population}"
+
+                            regionText.text =
+                                "Region: ${countryData.region}"
 
                         } else {
 
-                            capitalText.setText(
-                                    "Capital: No information"
-                            );
-                        }
-
-                        populationText.setText(
-                                "Population: " +
-                                        countryData.getPopulation()
-                        );
-
-                        regionText.setText(
-                                "Region: " +
-                                        countryData.getRegion()
-                        );
-
-                    } else {
-
-                        Toast.makeText(
+                            Toast.makeText(
                                 requireContext(),
                                 "Country not found",
                                 Toast.LENGTH_SHORT
-                        ).show();
+                            ).show()
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(
-                        Call<List<Country>> call,
-                        Throwable t) {
+                    override fun onFailure(
+                        call: Call<MutableList<Country>>,
+                        t: Throwable
+                    ) {
 
-                    Log.e("COUNTRY_API", "API connection failed", t);
+                        Log.e(
+                            "COUNTRY_API",
+                            "API connection failed",
+                            t
+                        )
 
-                    Toast.makeText(
+                        Toast.makeText(
                             requireContext(),
-                            "API error: " + t.getMessage(),
+                            "API error: ${t.message}",
                             Toast.LENGTH_LONG
-                    ).show();
-                }
-            });
-        });
+                        ).show()
+                    }
+                })
+        }
 
-        countryToWeatherBtn.setOnClickListener(v -> {
+        countryToWeatherBtn.setOnClickListener {
 
-            NavController navController =
-                    Navigation.findNavController(v);
+            val navController =
+                findNavController(it)
 
-            navController.popBackStack();
-        });
+            navController.popBackStack()
+        }
 
-        return view;
+        return view
     }
 }

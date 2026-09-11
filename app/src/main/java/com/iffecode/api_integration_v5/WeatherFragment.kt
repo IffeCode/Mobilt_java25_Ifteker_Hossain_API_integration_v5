@@ -1,290 +1,239 @@
-package com.iffecode.api_integration_v5;
+package com.iffecode.api_integration_v5
 
-import android.os.Bundle;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+class WeatherFragment : Fragment() {
+    private lateinit var cityInput: EditText
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+    private lateinit var cityText: TextView
+    private lateinit var temperatureText: TextView
+    private lateinit var conditionText: TextView
+    private lateinit var windText: TextView
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+    private lateinit var searchWeatherBtn: Button
+    private lateinit var weatherToHomeBtn: Button
+    private lateinit var countryBtn: Button
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(
+            R.layout.fragment_weather,
+            container,
+            false
+        )
 
-public class WeatherFragment extends Fragment {
+        cityInput = view.findViewById(R.id.cityInput)
 
-    private EditText cityInput;
+        cityText = view.findViewById(R.id.cityText)
+        temperatureText = view.findViewById(R.id.temperatureText)
+        conditionText = view.findViewById(R.id.conditionText)
+        windText = view.findViewById(R.id.windText)
 
-    private TextView cityText;
-    private TextView temperatureText;
-    private TextView conditionText;
-    private TextView windText;
-
-    private Button searchWeatherBtn;
-    private Button weatherToHomeBtn;
-    private Button countryBtn;
-
-    public WeatherFragment() {
-        // Required empty public constructor
-    }
-
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(
-                R.layout.fragment_weather,
-                container,
-                false
-        );
-
-        cityInput = view.findViewById(R.id.cityInput);
-
-        cityText = view.findViewById(R.id.cityText);
-        temperatureText = view.findViewById(R.id.temperatureText);
-        conditionText = view.findViewById(R.id.conditionText);
-        windText = view.findViewById(R.id.windText);
-
-        searchWeatherBtn = view.findViewById(R.id.searchWeatherBtn);
-        weatherToHomeBtn = view.findViewById(R.id.weatherToHomeBtn);
-        countryBtn = view.findViewById(R.id.countryBtn);
+        searchWeatherBtn = view.findViewById(R.id.searchWeatherBtn)
+        weatherToHomeBtn = view.findViewById(R.id.weatherToHomeBtn)
+        countryBtn = view.findViewById(R.id.countryBtn)
 
 
-        Retrofit geocodingRetrofit = new Retrofit.Builder()
-                .baseUrl("https://geocoding-api.open-meteo.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        val geocodingRetrofit = Retrofit.Builder()
+            .baseUrl("https://geocoding-api.open-meteo.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-        ApiService geocodingApi =
-                geocodingRetrofit.create(ApiService.class);
-
-
-        Retrofit weatherRetrofit = new Retrofit.Builder()
-                .baseUrl("https://api.open-meteo.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService weatherApi =
-                weatherRetrofit.create(ApiService.class);
+        val geocodingApi =
+            geocodingRetrofit.create<ApiService>(ApiService::class.java)
 
 
-        searchWeatherBtn.setOnClickListener(v -> {
+        val weatherRetrofit = Retrofit.Builder()
+            .baseUrl("https://api.open-meteo.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-            String city =
-                    cityInput.getText().toString().trim();
+        val weatherApi =
+            weatherRetrofit.create<ApiService>(ApiService::class.java)
+
+
+        searchWeatherBtn.setOnClickListener {
+
+            val city = cityInput!!.text.toString().trim()
 
             if (city.isEmpty()) {
 
                 Toast.makeText(
-                        requireContext(),
-                        "Please enter a city",
-                        Toast.LENGTH_SHORT
-                ).show();
+                    requireContext(),
+                    "Please enter a city",
+                    Toast.LENGTH_SHORT
+                ).show()
 
-                return;
+                return@setOnClickListener
             }
 
             geocodingApi.getLocation(city, 1)
-                    .enqueue(new Callback<GeocodingResponse>() {
+                .enqueue(object : Callback<GeocodingResponse> {
 
-                        @Override
-                        public void onResponse(
-                                Call<GeocodingResponse> call,
-                                Response<GeocodingResponse> response) {
+                    override fun onResponse(
+                        call: Call<GeocodingResponse>,
+                        response: Response<GeocodingResponse>
+                    ) {
 
-                            if (response.isSuccessful()
-                                    && response.body() != null
-                                    && response.body().getResults() != null
-                                    && !response.body().getResults().isEmpty()) {
+                        if (
+                            response.isSuccessful &&
+                            response.body() != null &&
+                            !response.body()!!.results.isNullOrEmpty()
+                        ) {
 
-                                Geocoding location =
-                                        response.body()
-                                                .getResults()
-                                                .get(0);
+                            val location =
+                                response.body()!!.results!![0]
 
-                                double latitude =
-                                        location.getLatitude();
+                            val latitude =
+                                location.latitude
 
-                                double longitude =
-                                        location.getLongitude();
+                            val longitude =
+                                location.longitude
 
-                                weatherApi.getWeather(
-                                                latitude,
-                                                longitude,
-                                                "temperature_2m,wind_speed_10m,weather_code"
-                                        )
-                                        .enqueue(new Callback<OpenMeteoWeather>() {
+                            weatherApi.getWeather(
+                                latitude,
+                                longitude,
+                                "temperature_2m,wind_speed_10m,weather_code"
+                            ).enqueue(object : Callback<OpenMeteoWeather> {
 
-                                            @Override
-                                            public void onResponse(
-                                                    Call<OpenMeteoWeather> call,
-                                                    Response<OpenMeteoWeather> response) {
+                                override fun onResponse(
+                                    call: Call<OpenMeteoWeather>,
+                                    response: Response<OpenMeteoWeather>
+                                ) {
 
-                                                if (response.isSuccessful()
-                                                        && response.body() != null
-                                                        && response.body().getCurrent() != null) {
+                                    if (
+                                        response.isSuccessful &&
+                                        response.body() != null &&
+                                        response.body()!!.current != null
+                                    ) {
 
-                                                    OpenMeteoWeather weather =
-                                                            response.body();
+                                        val weather =
+                                            response.body()!!
 
-                                                    CurrentWeather current =
-                                                            weather.getCurrent();
+                                        val current =
+                                            weather.current!!
 
-                                                    cityText.setText(
-                                                            location.getName()
-                                                    );
+                                        cityText!!.text =
+                                            location.name
 
-                                                    temperatureText.setText(
-                                                            "Temperature: "
-                                                                    + current.getTemperature_2m()
-                                                                    + " °C"
-                                                    );
+                                        temperatureText!!.text =
+                                            "Temperature: ${current.temperature_2m} °C"
 
-                                                    conditionText.setText(
-                                                            "Condition: "
-                                                                    + getWeatherDescription(
-                                                                    current.getWeather_code()
-                                                            )
-                                                    );
+                                        conditionText!!.text =
+                                            "Condition: ${
+                                                getWeatherDescription(
+                                                    current.weather_code
+                                                )
+                                            }"
 
-                                                    windText.setText(
-                                                            "Wind: "
-                                                                    + current.getWind_speed_10m()
-                                                                    + " km/h"
-                                                    );
+                                        windText!!.text =
+                                            "Wind: ${current.wind_speed_10m} km/h"
 
-                                                } else {
+                                    } else {
 
-                                                    Toast.makeText(
-                                                            requireContext(),
-                                                            "Could not get weather data",
-                                                            Toast.LENGTH_SHORT
-                                                    ).show();
-                                                }
-                                            }
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Could not get weather data",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
 
-                                            @Override
-                                            public void onFailure(
-                                                    Call<OpenMeteoWeather> call,
-                                                    Throwable t) {
+                                override fun onFailure(
+                                    call: Call<OpenMeteoWeather>,
+                                    t: Throwable
+                                ) {
 
-                                                Toast.makeText(
-                                                        requireContext(),
-                                                        "Weather API connection failed",
-                                                        Toast.LENGTH_SHORT
-                                                ).show();
-                                            }
-                                        });
-
-                            } else {
-
-                                Toast.makeText(
+                                    Toast.makeText(
                                         requireContext(),
-                                        "City not found",
+                                        "Weather API connection failed",
                                         Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                        }
+                                    ).show()
+                                }
+                            })
 
-                        @Override
-                        public void onFailure(
-                                Call<GeocodingResponse> call,
-                                Throwable t) {
+                        } else {
 
                             Toast.makeText(
-                                    requireContext(),
-                                    "Location API connection failed",
-                                    Toast.LENGTH_SHORT
-                            ).show();
+                                requireContext(),
+                                "City not found",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    });
-        });
+                    }
 
-        countryBtn.setOnClickListener(v -> {
+                    override fun onFailure(
+                        call: Call<GeocodingResponse>,
+                        t: Throwable
+                    ) {
 
-            NavController navController =
-                    Navigation.findNavController(v);
+                        Toast.makeText(
+                            requireContext(),
+                            "Location API connection failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+        }
 
-            navController.navigate(R.id.countryFragment);
-        });
+        countryBtn!!.setOnClickListener(View.OnClickListener { v: View? ->
+            val navController =
+                findNavController(v!!)
+            navController.navigate(R.id.countryFragment)
+        })
 
 
-        weatherToHomeBtn.setOnClickListener(v -> {
+        weatherToHomeBtn!!.setOnClickListener(View.OnClickListener { v: View? ->
+            val activity =
+                requireActivity() as MainActivity2
+            activity.showHome()
+        })
 
-            MainActivity2 activity =
-                    (MainActivity2) requireActivity();
-
-            activity.showHome();
-        });
-
-        return view;
+        return view
     }
 
-    private String getWeatherDescription(int weatherCode) {
+    private fun getWeatherDescription(weatherCode: Int): String {
+        when (weatherCode) {
+            0 -> return "Clear sky"
 
-        switch (weatherCode) {
+            1 -> return "Mainly clear"
 
-            case 0:
-                return "Clear sky";
+            2 -> return "Partly cloudy"
 
-            case 1:
-                return "Mainly clear";
+            3 -> return "Overcast"
 
-            case 2:
-                return "Partly cloudy";
+            45, 48 -> return "Fog"
 
-            case 3:
-                return "Overcast";
+            51, 53, 55 -> return "Drizzle"
 
-            case 45:
-            case 48:
-                return "Fog";
+            61, 63, 65 -> return "Rain"
 
-            case 51:
-            case 53:
-            case 55:
-                return "Drizzle";
+            71, 73, 75 -> return "Snow"
 
-            case 61:
-            case 63:
-            case 65:
-                return "Rain";
+            80, 81, 82 -> return "Rain showers"
 
-            case 71:
-            case 73:
-            case 75:
-                return "Snow";
+            95 -> return "Thunderstorm"
 
-            case 80:
-            case 81:
-            case 82:
-                return "Rain showers";
+            96, 99 -> return "Thunderstorm with hail"
 
-            case 95:
-                return "Thunderstorm";
-
-            case 96:
-            case 99:
-                return "Thunderstorm with hail";
-
-            default:
-                return "Unknown";
+            else -> return "Unknown"
         }
     }
 }
