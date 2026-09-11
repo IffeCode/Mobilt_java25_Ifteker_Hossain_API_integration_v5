@@ -4,19 +4,19 @@ import java.util.List;
 
 public class Country {
 
-    private CountryName name;
-    private List<String> capital;
+    private String name;
+    private String capital;
     private long population;
     private String region;
 
     public Country() {
     }
 
-    public CountryName getName() {
+    public String getName() {
         return name;
     }
 
-    public List<String> getCapital() {
+    public String getCapital() {
         return capital;
     }
 

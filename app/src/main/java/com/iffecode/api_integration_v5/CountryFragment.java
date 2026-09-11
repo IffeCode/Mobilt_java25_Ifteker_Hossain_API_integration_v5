@@ -69,7 +69,7 @@ public class CountryFragment extends Fragment {
         countryToWeatherBtn = view.findViewById(R.id.countryToWeatherBtn);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://restcountries.com/")
+                .baseUrl("https://countries.dev/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -106,7 +106,7 @@ public class CountryFragment extends Fragment {
 
                         countryNameText.setText(
                                 "Country: " +
-                                        countryData.getName().getCommon()
+                                        countryData.getName()
                         );
 
                         if (countryData.getCapital() != null
@@ -114,7 +114,7 @@ public class CountryFragment extends Fragment {
 
                             capitalText.setText(
                                     "Capital: " +
-                                            countryData.getCapital().get(0)
+                                            countryData.getCapital()
                             );
 
                         } else {

@@ -22,7 +22,7 @@ public interface ApiService {
             @Query("current") String current
     );
 
-    @GET("v3.1/name/{country}")
+    @GET("name/{country}")
     Call<List<Country>> getCountry(
             @Path("country") String country
     );
