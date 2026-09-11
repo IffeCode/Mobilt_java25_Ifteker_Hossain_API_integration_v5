@@ -1,5 +1,6 @@
 package com.iffecode.api_integration_v5;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity2 extends AppCompatActivity {
 
     private TextView textView6;
@@ -23,6 +26,8 @@ public class MainActivity2 extends AppCompatActivity {
     private Button weatherBtn;
 
     private View navHostFragment;
+
+    private Button logoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,8 @@ public class MainActivity2 extends AppCompatActivity {
 
         profileBtn = findViewById(R.id.profileBtn);
         weatherBtn = findViewById(R.id.weatherBtn);
+
+        logoutBtn = findViewById(R.id.logoutBtn);
 
         NavHostFragment navHost =
                 (NavHostFragment) getSupportFragmentManager()
@@ -73,6 +80,18 @@ public class MainActivity2 extends AppCompatActivity {
             navHostFragment.setVisibility(View.VISIBLE);
 
             navController.navigate(R.id.weatherFragment);
+        });
+
+
+        logoutBtn.setOnClickListener(v -> {
+
+            FirebaseAuth.getInstance().signOut();
+
+            Intent intent = new Intent(MainActivity2.this, MainActivity.class);
+
+            startActivity(intent);
+
+            finish();
         });
 
 
