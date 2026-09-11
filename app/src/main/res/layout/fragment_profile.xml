@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout3"
@@ -7,39 +9,93 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/profileTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="604dp"
-        android:text="@string/hello_blank_fragment"
-        app:layout_constraintBottom_toTopOf="@+id/ProfileToHomeBtn"
+        android:layout_marginTop="30dp"
+        android:text="Profile"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/fullnameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Full name: --"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/profileTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/usernameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Username: --"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/fullnameText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/emailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Email: --"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/usernameText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/genderText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Gender: --"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/emailText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/dateOfBirthText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Date of birth: --"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/genderText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/ProfileToHomeBtn"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="41dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="48dp"
-        android:text="Home to Profile"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="28dp"
+        android:text="Home"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ProfileToEditBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/ProfileToEditBtn"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="28dp"
-        android:text="Profile to Edit"
-        app:layout_constraintBottom_toBottomOf="@+id/ProfileToHomeBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ProfileToHomeBtn"
-        app:layout_constraintTop_toTopOf="@+id/ProfileToHomeBtn" />
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="28dp"
+        android:text="Edit Profile"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

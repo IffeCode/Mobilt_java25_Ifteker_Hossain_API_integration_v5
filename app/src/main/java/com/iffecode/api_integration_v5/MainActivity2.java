@@ -1,7 +1,9 @@
 package com.iffecode.api_integration_v5;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,26 +16,62 @@ import androidx.navigation.fragment.NavHostFragment;
 
 public class MainActivity2 extends AppCompatActivity {
 
+    private TextView textView6;
+    private TextView textView7;
+
+    private Button profileBtn;
+    private Button weatherBtn;
+
+    private View navHostFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main2);
 
-        Button profileBtn = findViewById(R.id.profileBtn);
-        Button weatherBtn = findViewById(R.id.weatherBtn);
 
-        NavHostFragment navHostFragment =
+        textView6 = findViewById(R.id.textView6);
+        textView7 = findViewById(R.id.textView7);
+
+        profileBtn = findViewById(R.id.profileBtn);
+        weatherBtn = findViewById(R.id.weatherBtn);
+
+        NavHostFragment navHost =
                 (NavHostFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.nav_host_fragment);
 
-        NavController navController = navHostFragment.getNavController();
+        navHostFragment = findViewById(R.id.nav_host_fragment);
+
+
+        NavController navController =
+                navHost.getNavController();
+
+        navHostFragment.setVisibility(View.GONE);
+
 
         profileBtn.setOnClickListener(v -> {
+
+            textView6.setVisibility(View.GONE);
+            textView7.setVisibility(View.GONE);
+            profileBtn.setVisibility(View.GONE);
+            weatherBtn.setVisibility(View.GONE);
+
+            navHostFragment.setVisibility(View.VISIBLE);
+
             navController.navigate(R.id.profileFragment);
         });
 
+
         weatherBtn.setOnClickListener(v -> {
+
+            textView6.setVisibility(View.GONE);
+            textView7.setVisibility(View.GONE);
+            profileBtn.setVisibility(View.GONE);
+            weatherBtn.setVisibility(View.GONE);
+
+            navHostFragment.setVisibility(View.VISIBLE);
+
             navController.navigate(R.id.weatherFragment);
         });
 
@@ -46,4 +84,15 @@ public class MainActivity2 extends AppCompatActivity {
             return insets;
         });
     }
+
+    public void showHome() {
+
+        navHostFragment.setVisibility(View.GONE);
+
+        textView6.setVisibility(View.VISIBLE);
+        textView7.setVisibility(View.VISIBLE);
+        profileBtn.setVisibility(View.VISIBLE);
+        weatherBtn.setVisibility(View.VISIBLE);
+    }
+
 }

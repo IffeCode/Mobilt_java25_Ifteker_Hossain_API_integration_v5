@@ -141,8 +141,11 @@ public class WeatherFragment extends Fragment {
 
 
         weatherToHomeBtn.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(v);
-            navController.popBackStack();
+
+            MainActivity2 activity =
+                    (MainActivity2) requireActivity();
+
+            activity.showHome();
         });
 
         return view;
