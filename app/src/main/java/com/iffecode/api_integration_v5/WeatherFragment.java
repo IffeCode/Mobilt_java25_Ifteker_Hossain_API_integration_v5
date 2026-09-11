@@ -33,6 +33,7 @@ public class WeatherFragment extends Fragment {
 
     private Button searchWeatherBtn;
     private Button weatherToHomeBtn;
+    private Button countryBtn;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -59,6 +60,7 @@ public class WeatherFragment extends Fragment {
 
         searchWeatherBtn = view.findViewById(R.id.searchWeatherBtn);
         weatherToHomeBtn = view.findViewById(R.id.weatherToHomeBtn);
+        countryBtn = view.findViewById(R.id.countryBtn);
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -127,6 +129,14 @@ public class WeatherFragment extends Fragment {
                     ).show();
                 }
             });
+        });
+
+        countryBtn.setOnClickListener(v -> {
+
+            NavController navController =
+                    Navigation.findNavController(v);
+
+            navController.navigate(R.id.countryFragment);
         });
 
 

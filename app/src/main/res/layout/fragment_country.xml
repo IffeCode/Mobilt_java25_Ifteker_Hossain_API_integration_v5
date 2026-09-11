@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/weatherMain"
+    android:id="@+id/countryMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WeatherFragment">
+    tools:context=".CountryFragment">
+
+
 
     <TextView
-        android:id="@+id/weatherTitle"
+        android:id="@+id/countryTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="Weather"
+        android:text="Country"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,89 +24,80 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/cityInput"
+        android:id="@+id/countryInput"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
-        android:hint="Enter city"
+        android:hint="Enter country"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weatherTitle" />
+        app:layout_constraintTop_toBottomOf="@id/countryTitle" />
 
     <Button
-        android:id="@+id/searchWeatherBtn"
+        android:id="@+id/searchCountryBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="Search Weather"
+        android:text="Search Country"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cityInput" />
+        app:layout_constraintTop_toBottomOf="@id/countryInput" />
 
     <TextView
-        android:id="@+id/cityText"
+        android:id="@+id/countryNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
-        android:text="City"
-        android:textSize="26sp"
+        android:text="Country: --"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchWeatherBtn" />
+        app:layout_constraintTop_toBottomOf="@id/searchCountryBtn" />
 
     <TextView
-        android:id="@+id/temperatureText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Temperature: -- °C"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cityText" />
-
-    <TextView
-        android:id="@+id/conditionText"
+        android:id="@+id/capitalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="Condition: --"
+        android:text="Capital: --"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/temperatureText" />
+        app:layout_constraintTop_toBottomOf="@id/countryNameText" />
 
     <TextView
-        android:id="@+id/humidityText"
+        android:id="@+id/populationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="Humidity: -- %"
+        android:text="Population: --"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/conditionText" />
+        app:layout_constraintTop_toBottomOf="@id/capitalText" />
 
-    <Button
-        android:id="@+id/countryBtn"
+    <TextView
+        android:id="@+id/regionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:text="Country"
-        app:layout_constraintBottom_toTopOf="@id/weatherToHomeBtn"
+        android:layout_marginTop="15dp"
+        android:text="Region: --"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/populationText" />
 
     <Button
-        android:id="@+id/weatherToHomeBtn"
+        android:id="@+id/countryToWeatherBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:text="Home"
+        android:text="Weather"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

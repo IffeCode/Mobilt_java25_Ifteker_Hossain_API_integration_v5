@@ -29,4 +29,10 @@
         android:label="Weather"
         tools:layout="@layout/fragment_weather" />
 
+    <fragment
+        android:id="@+id/countryFragment"
+        android:name="com.iffecode.api_integration_v5.CountryFragment"
+        android:label="Country"
+        tools:layout="@layout/fragment_country" />
+
 </navigation>
